@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "TimerManager.h"
 #include "MovingPlatform.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogSparta, Warning, All);
 UCLASS()
 class HOMEWORK6_API AMovingPlatform : public AActor
 {
@@ -29,12 +31,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Settings")
 	FVector MaxRange;
 	FVector3d StartLocation;
+	FVector3d EndLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Settings")
+	float StepDistance = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Settings")
+	float StepTime = 0.1f;
+
+	FTimerHandle TimerHandle;
 
 	// 함수를 블루프린트에서 호출 가능하도록 설정
 	UFUNCTION(BlueprintCallable, Category = "Item|Actions")
 	void ResetActorPosition();
 
 	void MoveActor();
+
+	bool isForward = true;
 
 public:	
 	// Called every frame

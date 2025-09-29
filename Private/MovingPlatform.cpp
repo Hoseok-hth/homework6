@@ -3,6 +3,7 @@
 
 #include "MovingPlatform.h"
 
+DEFINE_LOG_CATEGORY(LogSparta);
 // Sets default values
 AMovingPlatform::AMovingPlatform()
 {
@@ -24,6 +25,9 @@ void AMovingPlatform::BeginPlay()
 	Super::BeginPlay();
 
 	StartLocation = GetActorLocation();
+	EndLocation = StartLocation + MaxRange;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMovingPlatform::MoveActor, StepTime, true);
+
 	
 }
 
@@ -58,5 +62,23 @@ void AMovingPlatform::ResetActorPosition()
 
 void AMovingPlatform::MoveActor()
 {
+	
+	FVector Current = GetActorLocation();
+	FVector Target = isForward ? EndLocation : StartLocation;
+	UE_LOG(LogSparta, Error, TEXT("current: %f"), Current.X);
+	UE_LOG(LogSparta, Error, TEXT("target: %f"),Target.X);
+	// 한 스텝 이동
+	FVector Direction = (Target - Current).GetSafeNormal();
+	FVector NewLocation = Current + Direction * StepDistance;
+
+	SetActorLocation(NewLocation);
+
+	// 목표 위치 도달 체크
+	if (FVector::Dist(NewLocation, Target) <= StepDistance)
+	{
+		NewLocation = Target;
+		isForward = !isForward; // 방향 반전
+	}
+	
 }
 
