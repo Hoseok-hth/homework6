@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AMovingPlatform();
 
+	AMovingPlatform(float sp, FVector mr);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,9 +28,9 @@ protected:
 	UStaticMeshComponent* StaticMeshComp;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item|Properties")
 	float RotationSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true), Category = "Platform Settings")
 	float MovingSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true), Category = "Platform Settings")
 	FVector MaxRange;
 	FVector3d StartLocation;
 	FVector3d EndLocation;
@@ -42,6 +44,10 @@ protected:
 	// 함수를 블루프린트에서 호출 가능하도록 설정
 	UFUNCTION(BlueprintCallable, Category = "Item|Actions")
 	void ResetActorPosition();
+	UFUNCTION(BlueprintCallable, Category = "Platform Settings")
+	void SetMovingSpeed(float speed);
+	UFUNCTION(BlueprintCallable, Category = "Platform Settings")
+	void SetMaxRange(FVector mr);
 
 	void MoveActor();
 
@@ -50,5 +56,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	
 
 };

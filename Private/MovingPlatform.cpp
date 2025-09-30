@@ -16,7 +16,47 @@ AMovingPlatform::AMovingPlatform()
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMeshComp->SetupAttachment(SceneRoot);
 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/Resources/Props/SM_Chair.SM_Chair"));
+	if (MeshAsset.Succeeded())
+	{
+		StaticMeshComp->SetStaticMesh(MeshAsset.Object);
+	}
 
+	// Material을 코드에서 설정
+	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("/Game/Resources/Materials/M_Metal_Gold.M_Metal_Gold"));
+	if (MaterialAsset.Succeeded())
+	{
+		StaticMeshComp->SetMaterial(0, MaterialAsset.Object);
+	}
+
+
+}
+
+AMovingPlatform::AMovingPlatform(float sp, FVector mr)
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
+	SetRootComponent(SceneRoot);
+
+	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	StaticMeshComp->SetupAttachment(SceneRoot);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/Resources/Props/SM_Chair.SM_Chair"));
+	if (MeshAsset.Succeeded())
+	{
+		StaticMeshComp->SetStaticMesh(MeshAsset.Object);
+	}
+
+	// Material을 코드에서 설정
+	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("/Game/Resources/Materials/M_Metal_Gold.M_Metal_Gold"));
+	if (MaterialAsset.Succeeded())
+	{
+		StaticMeshComp->SetMaterial(0, MaterialAsset.Object);
+	}
+
+	MovingSpeed = sp;
+	MaxRange = mr;
 }
 
 // Called when the game starts or when spawned
@@ -51,6 +91,16 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 	
 
+}
+
+void AMovingPlatform::SetMovingSpeed(float speed)
+{
+	MovingSpeed = speed;
+}
+
+void AMovingPlatform::SetMaxRange(FVector mr)
+{
+	MaxRange = mr;
 }
 
 // BlueprintCallable 함수 구현
